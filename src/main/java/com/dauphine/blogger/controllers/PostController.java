@@ -1,9 +1,11 @@
 package com.dauphine.blogger.controllers;
 
+import com.dauphine.blogger.dto.PostDto;
 import com.dauphine.blogger.models.Post;
 import com.dauphine.blogger.services.CategoryService;
 import com.dauphine.blogger.services.PostService;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -14,44 +16,47 @@ public class PostController {
 
     private PostService postService;
 
+
+
     public PostController(PostService postServiceService) {
         this.postService = postServiceService;
     }
 
-    @PostMapping("/")
-    public Post create(@RequestBody String title, @RequestBody String content, @PathVariable UUID categoryId){
-        return postService.create(title,content,categoryId);
+    @PostMapping("")
+    public Post createPost(@RequestBody PostDto postDto) {
+        return postService.create(postDto);
     }
 
-    @PutMapping("/{id}")
-    public Post update(@PathVariable UUID id, @RequestBody String title,@RequestBody String content ){
-        return postService.update(id,title,content);
+    @PutMapping("/{postId}")
+    public Post updatePost(@PathVariable("postId") UUID postId,@RequestBody PostDto postDto) {
+        return postService.update(postId,postDto);
+
     }
 
     // Endpoint pour supprimer un post existant
-    @DeleteMapping("/{id}")
-    public boolean deleteById(@PathVariable UUID id){
-        return postService.deleteById(id);
+    @DeleteMapping("/{postId}")
+    public boolean deleteById(@PathVariable UUID postId){
+        return postService.deleteById(postId);
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<Post> getAll(){
         return postService.getAll();
     }
 
     @GetMapping("/{postId}")
-    public Post getById(@PathVariable UUID id){
-        return postService.getById(id);
+    public Post getById(@PathVariable UUID postId){
+        return postService.getById(postId);
     }
 
-    @GetMapping("/categories/{categoryId}")
-    public List<Post> getAllByCategory(@PathVariable UUID categoryID){
-        return postService.getAllByCategoryId(categoryID);
+    @GetMapping("/categories/{categoryId}/posts")
+    public List<Post> getAllByCategory(@PathVariable UUID categoryId){
+        return postService.getAllByCategoryId(categoryId);
     }
 
     @GetMapping("/topics")
-    public List<Post> getByTitleOrContent(@RequestParam String title, @RequestParam String content){
-        return postService.getByTitleOrContent(title,content);
+    public List<Post> getByTitleOrContent(@RequestParam String value){
+        return postService.getByTitleOrContent(value);
     }
 
 

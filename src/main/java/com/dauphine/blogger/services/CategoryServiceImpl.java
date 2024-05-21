@@ -1,6 +1,7 @@
 package com.dauphine.blogger.services;
 
 import com.dauphine.blogger.Repository.CategoryRepository;
+import com.dauphine.blogger.dto.CategoryDto;
 import org.springframework.stereotype.Service;
 import com.dauphine.blogger.models.Category;
 
@@ -26,18 +27,25 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public Category createNewCategory(String name) {
-        Category category = new Category();
+    public Category create(CategoryDto categoryDto) {
+        final boolean alreadyExisting=categoryRepository.existsByName(categoryDto.getName());
+        if(alreadyExisting){
+            throw new RuntimeException("Category with name : " +categoryDto.getName() + " is already existing");
+        }
+        Category category=new Category();
+        category.setId(UUID.randomUUID());
+        category.setName(categoryDto.getName());
         return categoryRepository.save(category);
+
     }
 
     @Override
-    public Category updateCategoryName(UUID id, String name) {
-        Category category = getById(id);
-        if (category == null) {
+    public Category update(UUID id, CategoryDto categoryDto) {
+        Category category=getById(id);
+        if(category==null){
             return null;
         }
-        category.setName(name);
+        category.setName(categoryDto.getName());
         return categoryRepository.save(category);
     }
 

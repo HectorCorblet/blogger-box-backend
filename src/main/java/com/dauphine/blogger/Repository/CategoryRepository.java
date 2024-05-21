@@ -15,5 +15,7 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
     from Category c
     where c.name like concat('%',:name,'%') 
     """)
-    List<Category> findAllByName(@Param("name") String name);
+    List<Category> findAllByName(@Param("name")String name);
+    boolean existsByName(@Param("name")String name);
+
 }

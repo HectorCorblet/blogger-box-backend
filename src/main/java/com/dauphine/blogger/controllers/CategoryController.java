@@ -1,5 +1,6 @@
 package com.dauphine.blogger.controllers;
 
+import com.dauphine.blogger.dto.CategoryDto;
 import com.dauphine.blogger.services.CategoryService;
 import com.dauphine.blogger.models.Category;
 import org.springframework.http.ResponseEntity;
@@ -16,33 +17,35 @@ public class CategoryController {
     public CategoryController (CategoryService categoryService){
         this.categoryService=categoryService;
     }
-    @GetMapping("/")
-    public List<Category> getAllCategories(@RequestParam String name) {
+    @GetMapping("")
+    public List<Category> getAllCategories(@RequestParam(required = false) String name) {
         return name==null || name.isBlank()
                 ? categoryService.getAllCategories()
                 : categoryService.getAllByName(name);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Category> getACategory(@PathVariable UUID id) {
-        final Category category = categoryService.getById(id);
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<Category> getACategory(@PathVariable UUID categoryId) {
+        final Category category = categoryService.getById(categoryId);
         return ResponseEntity.ok(category);
     }
 
 
-//    @PostMapping("/")
-//    public ResponseEntity<Category> createNewCategory(@RequestBody CategoryRequest request) {
-//        final Category category = categoryService.createNewCategory(request.getname());
-//        return categoryService.createNewCategory(request);
-//    }
+    @PostMapping("")
+    public Category createCategory(@RequestBody CategoryDto category) {
+        return categoryService.create(category);
 
-    @PutMapping("/{id}")
-    public Category updateCategoryName(@PathVariable UUID id, @RequestBody String name) {
-        return categoryService.updateCategoryName(id,name);
     }
 
-    @DeleteMapping("/{id}")
-    public boolean deleteCategory(@PathVariable UUID id) {
-        return categoryService.deleteCategory(id);
+
+    @PutMapping("/{categoryId}")
+    public void updateCategory(@PathVariable("categoryId") UUID categoryId,
+                               @RequestBody CategoryDto category) {
+        categoryService.update(categoryId,category);
+    }
+
+    @DeleteMapping("/{categoryId}")
+    public boolean deleteCategory(@PathVariable UUID categoryId) {
+        return categoryService.deleteCategory(categoryId);
     }
 }

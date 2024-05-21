@@ -1,5 +1,6 @@
 package com.dauphine.blogger.services;
 
+import com.dauphine.blogger.dto.PostDto;
 import com.dauphine.blogger.models.Post;
 import jdk.jfr.Category;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,9 +14,9 @@ public interface PostService {
     List<Post> getAll();
     Post getById(UUID id);
 
-    Post create(String title, String content, UUID categoryId);
-    Post update (UUID id, String title, String content );
+    Post create(PostDto postDto);
+    Post update(UUID id,PostDto postDto);
 
     boolean deleteById(UUID id);
-    List<Post> getByTitleOrContent(String title, String content);
+    List<Post> getByTitleOrContent(String value);
 }

@@ -1,5 +1,6 @@
 package com.dauphine.blogger.services;
 
+import com.dauphine.blogger.dto.CategoryDto;
 import com.dauphine.blogger.models.Category;
 
 import java.util.List;
@@ -11,10 +12,9 @@ public interface CategoryService {
 
     Category getById(UUID id);
 
-    Category createNewCategory(String name);
+    Category create(CategoryDto category);
 
-    Category updateCategoryName( UUID id, String name);
-
+    Category update(UUID id,CategoryDto category);
     boolean deleteCategory(UUID id);
 
     List<Category> getAllByName(String name);
