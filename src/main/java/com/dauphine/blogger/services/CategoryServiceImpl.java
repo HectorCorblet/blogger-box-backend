@@ -2,6 +2,7 @@ package com.dauphine.blogger.services;
 
 import com.dauphine.blogger.Repository.CategoryRepository;
 import com.dauphine.blogger.dto.CategoryDto;
+import com.dauphine.blogger.services.exceptions.CategoryNotFoundByIdException;
 import org.springframework.stereotype.Service;
 import com.dauphine.blogger.models.Category;
 
@@ -22,8 +23,9 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public Category getById(UUID id) {
-        return categoryRepository.findById(id).orElse(null);
+    public Category getById(UUID id) throws CategoryNotFoundByIdException {
+        return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundByIdException("Category with id "
+                + id + " not found"));
     }
 
     @Override
@@ -40,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public Category update(UUID id, CategoryDto categoryDto) {
+    public Category update(UUID id, CategoryDto categoryDto) throws CategoryNotFoundByIdException {
         Category category=getById(id);
         if(category==null){
             return null;
@@ -50,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public boolean deleteCategory(UUID id) {
+    public boolean deleteCategory(UUID id)  {
         categoryRepository.deleteById(id);
         return true;
     }

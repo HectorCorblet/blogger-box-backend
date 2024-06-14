@@ -5,6 +5,7 @@ import com.dauphine.blogger.Repository.PostRepository;
 import com.dauphine.blogger.dto.PostDto;
 import com.dauphine.blogger.models.Category;
 import com.dauphine.blogger.models.Post;
+import com.dauphine.blogger.services.exceptions.PostNotFoundByIdException;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -25,7 +26,7 @@ public class PostServiceImpl implements  PostService{
     }
 
     @Override
-    public List<Post> getAllByCategoryId(UUID categoryId) {
+    public List<Post> getAllByCategoryId(UUID categoryId)  {
         return postRepository.findAllByCategoryId(categoryId);
     }
 
@@ -35,8 +36,9 @@ public class PostServiceImpl implements  PostService{
     }
 
     @Override
-    public Post getById(UUID id) {
-        return postRepository.findById(id).orElse(null);
+    public Post getById(UUID id)throws PostNotFoundByIdException {
+        return postRepository.findById(id).orElseThrow(() -> new PostNotFoundByIdException("Post with id "
+                + id + " not found"));
     }
 
 
@@ -52,7 +54,7 @@ public class PostServiceImpl implements  PostService{
     }
 
     @Override
-    public Post update(UUID id, PostDto postDto) {
+    public Post update(UUID id, PostDto postDto) throws PostNotFoundByIdException {
         Post post=getById(id);
         if(post==null){
             return null;

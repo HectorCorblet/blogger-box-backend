@@ -4,6 +4,8 @@ import com.dauphine.blogger.dto.PostDto;
 import com.dauphine.blogger.models.Post;
 import com.dauphine.blogger.services.CategoryService;
 import com.dauphine.blogger.services.PostService;
+import com.dauphine.blogger.services.exceptions.CategoryNotFoundByIdException;
+import com.dauphine.blogger.services.exceptions.PostNotFoundByIdException;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -28,14 +30,14 @@ public class PostController {
     }
 
     @PutMapping("/{postId}")
-    public Post updatePost(@PathVariable("postId") UUID postId,@RequestBody PostDto postDto) {
+    public Post updatePost(@PathVariable("postId") UUID postId,@RequestBody PostDto postDto) throws PostNotFoundByIdException {
         return postService.update(postId,postDto);
 
     }
 
     // Endpoint pour supprimer un post existant
     @DeleteMapping("/{postId}")
-    public boolean deleteById(@PathVariable UUID postId){
+    public boolean deleteById(@PathVariable UUID postId) throws PostNotFoundByIdException {
         return postService.deleteById(postId);
     }
 
@@ -45,12 +47,12 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public Post getById(@PathVariable UUID postId){
+    public Post getById(@PathVariable UUID postId) throws PostNotFoundByIdException {
         return postService.getById(postId);
     }
 
     @GetMapping("/categories/{categoryId}/posts")
-    public List<Post> getAllByCategory(@PathVariable UUID categoryId){
+    public List<Post> getAllByCategory(@PathVariable UUID categoryId) throws CategoryNotFoundByIdException {
         return postService.getAllByCategoryId(categoryId);
     }
 
